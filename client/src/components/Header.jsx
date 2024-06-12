@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <>
       <header className=" bg-slate-200 shadow-md">
-        <div className="flex justify-between items-center max-w-screen-lg mx-auto p-3">
+        <div className="flex justify-between items-center max-w-screen-2xl mx-auto p-3">
           <Link to="/">
             <h1 className=" font-bold text-sm sm:text-xl flex flex-wrap">
               <span className="text-orange-500">Land</span>
@@ -14,7 +14,7 @@ export default function Header() {
             </h1>
           </Link>
 
-          <form className="bg-slate-100 rounded-lg p-3 flex items-center">
+          <form className="bg-slate-100 rounded-lg p-2 flex items-center">
             <input
               className="focus:outline-none bg-transparent w-24 sm:w-64"
               type="text"
