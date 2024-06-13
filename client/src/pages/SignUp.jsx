@@ -38,7 +38,7 @@ export default function SignUp() {
       {/* Right side - Image */}
       <div className="flex-1">
         <img
-          className="h- w-full "
+          className="h-full w-full "
           src="https://images.pexels.com/photos/7599735/pexels-photo-7599735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
           alt="Login visual"
         />
