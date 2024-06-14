@@ -27,7 +27,7 @@ export default function SignIn() {
             Continue With Google
           </button>
           <p className="mt-4 flex">Have an account!! </p>
-          <Link to={"/singup"}>
+          <Link to={"/signup"}>
             <span className="text-blue-600 ml-2">Sign up</span>
           </Link>
         </form>
