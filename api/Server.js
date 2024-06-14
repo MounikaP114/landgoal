@@ -18,8 +18,8 @@ mongoose
   });
 
 app.use(express.json());
-app.use("/", userRouter);
-app.use("/", authRouter);
+app.use("/api", userRouter);
+app.use("/api", authRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
