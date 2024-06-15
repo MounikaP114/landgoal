@@ -3,6 +3,8 @@ import React, { forwardRef, useState } from "react";
 import { Link } from "react-router-dom";
 export default function SignUp() {
   const [formData, setFormData] = useState({});
+  const [loading, setloading] = useState(false);
+  const [dataerror, setDataError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -11,18 +13,32 @@ export default function SignUp() {
     });
   };
   console.log(formData);
-  const onFormSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch("/api/signup", {
-      method: POST,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await res.json();
-    console.log(data);
-  };
+  try {
+    setloading(true);
+    const onFormSubmit = async (e) => {
+      e.preventDefault();
+      const res = await fetch("/api/signup", {
+        method: POST,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (dataerror.success === false) {
+        setloading(false);
+        setDataError(dataerror.message);
+
+        return;
+      }
+      setloading(false);
+      console.log(data);
+    };
+  } catch (error) {
+    setloading(false);
+    setDataError(dataerror.message);
+  }
+
   return (
     <div className="flex h-dvh">
       {/* Left side - Login Form */}
@@ -53,8 +69,11 @@ export default function SignUp() {
             placeholder="Password"
             onChange={handleChange}
           ></input>
-          <button className="bg-slate-700 text-white p-2 rounded-sm w-full hover:opacity-95">
-            Sign Up
+          <button
+            disabled={loading}
+            className="bg-slate-700 text-white p-2 rounded-sm w-full hover:opacity-95"
+          >
+            {loading ? "Loading...." : "SignUp"}
           </button>
           <button className="bg-red-600 text-white p-2 rounded-sm w-full hover:opacity-95">
             Continue With Google
