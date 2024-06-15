@@ -18,16 +18,18 @@ export default function SignIn() {
             type="password"
             placeholder="Password"
           />
-          <button className="bg-slate-700 text-white p-2 rounded-sm w-full hover:bg-slate-200 focus:outline-none">
+          <button className="bg-slate-700 text-white p-2 rounded-sm w-full hover:opacity-95 focus:outline-none">
             Sign In
           </button>
-          <button className="bg-red-600 text-white p-2 rounded-sm w-full hover:bg-slate-200 focus:outline-none">
-            Continue With Google
+          <button className="bg-red-600 text-white p-2 rounded-sm w-full hover:opacity-95 focus:outline-none">
+            Continue With Google{" "}
           </button>
-          <p className="mt-4 flex">Don't Have an account!! </p>
-          <Link to={"/signup"}>
-            <span className="text-blue-600 ml-2">Sign up</span>
-          </Link>
+          <div className="flex mt-4 gap-2">
+            <p className=" flex">Don't Have an account! </p>
+            <Link to={"/signup"}>
+              <span className="text-blue-600 ">Sign up</span>
+            </Link>
+          </div>
         </form>
       </div>
 

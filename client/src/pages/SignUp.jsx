@@ -1,69 +1,75 @@
-import { json } from "express";
-import React, { forwardRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { React, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 export default function SignUp() {
   const [formData, setFormData] = useState({});
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [dataerror, setDataError] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
+    console.log(formData);
   };
-  console.log(formData);
-  try {
-    setloading(true);
-    const onFormSubmit = async (e) => {
-      e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
       const res = await fetch("/api/signup", {
-        method: POST,
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (dataerror.success === false) {
-        setloading(false);
-        setDataError(dataerror.message);
-
+      console.log(data);
+      if (!data.success) {
+        setLoading(false);
+        setDataError(data.message);
         return;
       }
-      setloading(false);
-      console.log(data);
-    };
-  } catch (error) {
-    setloading(false);
-    setDataError(dataerror.message);
-  }
+
+      setLoading(false);
+      setDataError(null);
+      navigate("/signin");
+
+      // Handle successful response here
+    } catch (error) {
+      setLoading(false);
+      setDataError(error.message);
+    }
+  };
 
   return (
     <div className="flex h-dvh">
       {/* Left side - Login Form */}
       <div className="flex-1 flex flex-col ju stify-center items-center bg-white">
         <h1 className="text-3xl text-center font-semibold mb-6">Sign Up</h1>
+
         <form
-          onSubmit={onFormSubmit}
+          onSubmit={handleSubmit}
           className="flex flex-col justify-center items-center space-y-6 w-3/4 "
         >
           <input
-            className="p-4 bg-slate-100 border rounded-lg w-full "
+            className="p-4 bg-slate-100 border rounded-lg w-full   focus:outline-none"
             id="username"
             type="text"
             placeholder="Username"
             onChange={handleChange}
           />
           <input
-            className="p-4 bg-slate-100 border rounded-lg w-full"
+            className="p-4 bg-slate-100 border rounded-lg w-full focus:outline-none"
             type="text"
             id="email"
             placeholder="Email"
             onChange={handleChange}
           />
           <input
-            className="p-4 bg-slate-100 border rounded-lg w-full"
+            className="p-4 bg-slate-100 border rounded-lg w-full focus:outline-none"
             id="password"
             type="password"
             placeholder="Password"
@@ -75,16 +81,15 @@ export default function SignUp() {
           >
             {loading ? "Loading...." : "SignUp"}
           </button>
-          <button className="bg-red-600 text-white p-2 rounded-sm w-full hover:opacity-95">
-            Continue With Google
-          </button>
-          <p className="mt-4">Have an account? </p>
-          <Link to={"/signin"}>
-            <span className="text-blue-600 ml-2">Sign in</span>
-          </Link>
         </form>
+        <div className="flex mt-4">
+          <p className="pr-5">Have an account? </p>
+          <Link to={"/signin"}>
+            <span className="text-blue-600">Sign in</span>
+          </Link>
+        </div>
+        {dataerror && <p className="text-red-500 mt-5">{dataerror}</p>}
       </div>
-      <p>{}</p>
 
       {/* Right side - Image */}
       <div className="flex-1">

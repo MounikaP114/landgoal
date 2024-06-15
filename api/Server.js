@@ -7,7 +7,7 @@ dotenv.config();
 
 const app = express();
 const PORT = 3001;
-
+app.use(express.json());
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => {
@@ -17,7 +17,7 @@ mongoose
     console.log("Error while connecting to mongodb,", error);
   });
 
-app.use(express.json());
+
 app.use("/api", userRouter);
 app.use("/api", authRouter);
 
