@@ -29,17 +29,17 @@ export default function SignIn() {
       console.log(data);
       if (!data.success) {
         setLoading(false);
-        setDataError(data.message);
+        setDataError(data.error);
         return;
       }
 
       setLoading(false);
       setDataError(null);
-
+      navigate("/");
       // Handle successful response here
     } catch (error) {
       setLoading(false);
-      setDataError(error.message);
+      setDataError(data.error);
     }
     navigate("/");
   };

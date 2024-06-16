@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [dataerror, setDataError] = useState(null);
+  const [error, setDataError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,14 +27,13 @@ export default function SignUp() {
       });
       console.log("Response status:", res.status);
       console.log("Response headers:", res.headers);
-      console.log(res.message)
+      console.log(res.message);
 
       const data = await res.json();
-      console.log(data);
 
       if (!data.success) {
         setLoading(false);
-        setDataError(data.message);
+        setDataError(data.error);
         return;
       }
       setLoading(false);
@@ -92,7 +91,7 @@ export default function SignUp() {
           </Link>
         </div>
 
-        {dataerror && <p className="text-red-500">{dataerror}</p>}
+        {error && <p className="text-red-500">{error}</p>}
       </div>
 
       {/* Right side - Image */}
