@@ -9,7 +9,7 @@ import {
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const { loading, error } = useSelector((state)=>state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,9 +32,8 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(res)
-      console.log(data);
-      if (data.success===false) {
+
+      if (data.success === false) {
         dispatch(signInFailure(data.message));
         return;
       }
@@ -83,7 +82,7 @@ export default function SignIn() {
             <span className="text-blue-600">Sign Up</span>
           </Link>
         </div>
-        {error && <p className='text-red-500 mt-5'>{error}</p>}
+        {error && <p className="text-red-500 mt-5">{error}</p>}
         {/* {dataerror && <p className="text-red-500 mt-5">{dataerror}</p>} */}
       </div>
 

@@ -31,7 +31,7 @@ export const signin = async (req, res, next) => {
   try {
     const validUser = await User.findOne({ email });
 
-    if (!validUser) return res.status(404).json("User not Found!!");
+    if (validUser === false) return res.status(404).json("User not Found!!");
 
     const validPassword = bcrypt.compareSync(password, validUser.password);
 
@@ -44,6 +44,6 @@ export const signin = async (req, res, next) => {
       .status(200)
       .json("Okay, Valid user!!!");
   } catch (rest) {
-    next(error);
+    next(rest);
   }
 };
