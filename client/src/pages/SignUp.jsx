@@ -25,18 +25,21 @@ export default function SignUp() {
         },
         body: JSON.stringify(formData),
       });
+      console.log("Response status:", res.status);
+      console.log("Response headers:", res.headers);
+      console.log(res.message)
+
       const data = await res.json();
       console.log(data);
+
       if (!data.success) {
         setLoading(false);
         setDataError(data.message);
         return;
       }
-
       setLoading(false);
       setDataError(null);
       navigate("/signin");
-
       // Handle successful response here
     } catch (error) {
       setLoading(false);
@@ -47,7 +50,7 @@ export default function SignUp() {
   return (
     <div className="flex h-dvh">
       {/* Left side - Login Form */}
-      <div className="flex-1 flex flex-col ju stify-center items-center bg-white">
+      <div className="flex-1 flex flex-col justify-center items-center bg-white">
         <h1 className="text-3xl text-center font-semibold mb-6">Sign Up</h1>
 
         <form
@@ -88,7 +91,8 @@ export default function SignUp() {
             <span className="text-blue-600">Sign in</span>
           </Link>
         </div>
-        {dataerror && <p className="text-red-500 mt-5">{dataerror}</p>}
+
+        {dataerror && <p className="text-red-500">{dataerror}</p>}
       </div>
 
       {/* Right side - Image */}
