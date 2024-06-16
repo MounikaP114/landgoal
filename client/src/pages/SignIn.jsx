@@ -1,11 +1,17 @@
 import { React, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccsess,
+} from "../redux/userSlice.js";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [dataerror, setDataError] = useState(null);
+  const { loading, error } = useSelector((state)=>state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
@@ -17,7 +23,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(signInStart());
       const res = await fetch("/api/signin", {
         method: "POST",
         headers: {
@@ -26,22 +32,18 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      console.log(res)
       console.log(data);
-      if (!data.success) {
-        setLoading(false);
-        setDataError(data.error);
+      if (data.success===false) {
+        dispatch(signInFailure(data.message));
         return;
       }
-
-      setLoading(false);
-      setDataError(null);
+      dispatch(signInSuccsess(data));
       navigate("/");
       // Handle successful response here
     } catch (error) {
-      setLoading(false);
-      setDataError(data.error);
+      dispatch(signInFailure(error.message));
     }
-    navigate("/");
   };
 
   return (
@@ -81,7 +83,8 @@ export default function SignIn() {
             <span className="text-blue-600">Sign Up</span>
           </Link>
         </div>
-        {dataerror && <p className="text-red-500 mt-5">{dataerror}</p>}
+        {error && <p className='text-red-500 mt-5'>{error}</p>}
+        {/* {dataerror && <p className="text-red-500 mt-5">{dataerror}</p>} */}
       </div>
 
       {/* Right side - Image */}
