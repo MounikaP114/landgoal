@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import {useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
@@ -31,9 +31,9 @@ export default function SignUp() {
 
       const data = await res.json();
 
-      if (!data.success) {
+      if (data.success===false) {
         setLoading(false);
-        setDataError(data.error);
+        setDataError(data.message);
         return;
       }
       setLoading(false);

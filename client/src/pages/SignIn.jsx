@@ -83,7 +83,6 @@ export default function SignIn() {
           </Link>
         </div>
         {error && <p className="text-red-500 mt-5">{error}</p>}
-        {/* {dataerror && <p className="text-red-500 mt-5">{dataerror}</p>} */}
       </div>
 
       {/* Right side - Image */}
