@@ -1,11 +1,12 @@
 import { React, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; 
 import {
   signInStart,
   signInFailure,
   signInSuccsess,
 } from "../redux/userSlice.js";
+import Oauth from "../components/Oauth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
@@ -75,6 +76,7 @@ export default function SignIn() {
           >
             {loading ? "Loading...." : "SignIn"}
           </button>
+          <Oauth />
         </form>
         <div className="flex mt-4">
           <p className="pr-5">Dont Have an account? </p>

@@ -17,7 +17,6 @@ mongoose
     console.log("Error while connecting to mongodb,", error);
   });
 
-
 app.use("/api", userRouter);
 app.use("/api", authRouter);
 

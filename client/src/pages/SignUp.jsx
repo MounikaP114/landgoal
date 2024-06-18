@@ -1,5 +1,6 @@
-import {useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Oauth from "../components/Oauth";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -31,7 +32,7 @@ export default function SignUp() {
 
       const data = await res.json();
 
-      if (data.success===false) {
+      if (data.success === false) {
         setLoading(false);
         setDataError(data.message);
         return;
@@ -83,6 +84,7 @@ export default function SignUp() {
           >
             {loading ? "Loading...." : "SignUp"}
           </button>
+          <Oauth />
         </form>
         <div className="flex mt-4">
           <p className="pr-5">Have an account? </p>
