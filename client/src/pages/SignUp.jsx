@@ -7,7 +7,6 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setDataError] = useState(null);
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -29,7 +28,6 @@ export default function SignUp() {
       console.log("Response status:", res.status);
       console.log("Response headers:", res.headers);
       console.log(res.message);
-
       const data = await res.json();
 
       if (data.success === false) {
@@ -63,6 +61,7 @@ export default function SignUp() {
             type="text"
             placeholder="Username"
             onChange={handleChange}
+            Cont
           />
           <input
             className="p-4 bg-slate-100 border rounded-lg w-full focus:outline-none"

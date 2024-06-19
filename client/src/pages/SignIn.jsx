@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"; 
+import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
   signInFailure,
@@ -61,6 +61,7 @@ export default function SignIn() {
             type="text"
             id="email"
             placeholder="Email"
+            autoComplete="username"
             onChange={handleChange}
           />
           <input
@@ -68,6 +69,7 @@ export default function SignIn() {
             id="password"
             type="password"
             placeholder="Password"
+            autoComplete="current-password"
             onChange={handleChange}
           ></input>
           <button

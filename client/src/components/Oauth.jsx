@@ -3,13 +3,19 @@ import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { signInSuccsess } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
-function Oauth() {
-  const dispact = useDispatch();
+import { useState } from "react";
+
+export default function Oauth() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
   const handleGoogle = async () => {
+    setLoading(true);
     try {
-      const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
 
       const result = await signInWithPopup(auth, provider);
       console.log(result);
@@ -25,22 +31,25 @@ function Oauth() {
         }),
       });
       const data = await res.json();
-      dispact(signInSuccsess(data));
+      dispatch(signInSuccsess(data));
       navigate("/");
     } catch (error) {
-      console.log("google sign is not working", error);
+      console.log("Google sign-in is not working", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <button
-      onClick={handleGoogle}
-      type="button"
-      className="bg bg-slate-100 p-3 rounded-lg w-full hover:opacity-95"
-    >
-      Continue with google
-    </button>
+    <div className="flex w-full">
+      <button
+        onClick={handleGoogle}
+        disabled={loading}
+        type="button"
+        className="bg bg-slate-100 p-3 rounded-lg w-full hover:opacity-95"
+      >
+        Continue with Google
+      </button>
+    </div>
   );
 }
-
-export default Oauth;
