@@ -8,8 +8,9 @@ export const user = (req, res) => {
   });
 };
 export const updateUserInfo = async (req, res, next) => {
+  console.log(req.user.id, req.params.id);
   if (req.user.id !== req.params.id)
-    return next(errorHandler(403, "forbidden"));
+    return next(errorHandler(401, "login with your account"));
 
   try {
     if (req.body.password) {
@@ -28,9 +29,9 @@ export const updateUserInfo = async (req, res, next) => {
       { new: true }
     );
 
-    const { password, ...rest } = updatedUser;
+    const { password, ...rest } = updatedUser._doc;
     res.status(201).json(rest);
   } catch (error) {
-    error(error);
+    next(error);
   }
 };
