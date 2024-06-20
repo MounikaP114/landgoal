@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { app } from "../firebase";
 import {
@@ -7,6 +7,11 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "../redux/userSlice";
 
 // match /{allPaths=**} {
 //   allow read;
@@ -21,6 +26,7 @@ export default function Profile() {
   const [fileUploadProgress, setFileUploadProgress] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const dispatch = useDispatch();
   console.log(file);
   console.log(fileUploadProgress);
   console.log(fileUploadError);
@@ -41,8 +47,10 @@ export default function Profile() {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFileUploadProgress(Math.round(percent));
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFileUploadProgress(Math.round(progress));
+        console.log(`upload ${progress}% done`);
       },
       (error) => {
         setFileUploadError(true);
@@ -54,16 +62,41 @@ export default function Profile() {
       }
     );
   };
-  // const handleChange = (e) => {
-  //   setFormData({ ...formData, [e.target.id]: e.target.value });
-  // };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      dispatch(updateUserStart());
+
+      const res = await fetch(`/api/updateUser/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (data.success == false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
+  };
 
   return (
     <div className="p-2 max-w-lg mx-auto">
       <h1 className="m-5 font-semibold text-2xl flex  items-center justify-center">
         Profile
       </h1>
-      <form className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           onChange={(e) => setFile(e.target.files[0])}
           type="file"
@@ -72,7 +105,7 @@ export default function Profile() {
           accept="image/*"
         ></input>
         <img
-          src={formData.avatar||currentUser.avatar}
+          src={formData.avatar || currentUser.avatar}
           onClick={() => fileRef.current.click()}
           alt="profile"
           className="rounded-full mt-2 cursor-pointer object-cover self-center h-24 w-24"
@@ -93,27 +126,30 @@ export default function Profile() {
         <input
           type="text "
           placeholder="username"
-          value={currentUser.username}
+          defaultValue={currentUser.username}
+          onChange={handleChange}
           className="border bg-slate-100 p-3 rounded-lg"
         ></input>
         <input
           type="text "
           placeholder="email"
-          value={currentUser.email}
+          defaultValue={currentUser.email}
+          onChange={handleChange}
           className="border bg-slate-100 p-3 rounded-lg"
         ></input>
         <input
           type="text "
           placeholder="password"
-          value={"**********"}
+          defaultValue={"**********"}
+          onChange={handleChange}
           className="bg-slate-100 p-3 rounded-lg border"
         ></input>
         <button className="bg-slate-500 p-3 rounded-lg uppercase hover:opacity-95">
           Update
         </button>
-        <button className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95">
+        {/* <button className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95">
           Creat listing
-        </button>
+        </button> */}
       </form>
       <div className="mt-5 flex text-red-800 justify-between cursor-pointer colo">
         <span>Delete Acccount</span>
