@@ -11,6 +11,9 @@ import {
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/userSlice";
 
 // match /{allPaths=**} {
@@ -20,13 +23,15 @@ import {
 //   && request.resource.contentType.matches('image/.*')
 
 export default function Profile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [fileUploadProgress, setFileUploadProgress] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [updateUserData, setUpdateUserData] = useState(false);
   const dispatch = useDispatch();
+
   console.log(file);
   console.log(fileUploadProgress);
   console.log(fileUploadError);
@@ -50,7 +55,7 @@ export default function Profile() {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setFileUploadProgress(Math.round(progress));
-        console.log(`upload ${progress}% done`);
+        //console.log(`upload ${progress}% done`);
       },
       (error) => {
         setFileUploadError(true);
@@ -72,7 +77,7 @@ export default function Profile() {
     try {
       dispatch(updateUserStart());
 
-      const res = await fetch(`/api/updateUser/${currentUser._id}`, {
+      const res = await fetch(`/api/update/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -81,13 +86,29 @@ export default function Profile() {
       });
       const data = await res.json();
 
-      if (data.success == false) {
+      if (data.success === false) {
         dispatch(updateUserFailure(data.message));
         return;
       }
       dispatch(updateUserSuccess(data));
+      setUpdateUserData(true);
     } catch (error) {
       dispatch(updateUserFailure(error.message));
+    }
+  };
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(`/api/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserStart(error.message));
     }
   };
 
@@ -125,38 +146,48 @@ export default function Profile() {
         </p>
         <input
           type="text "
+          id="username"
           placeholder="username"
           defaultValue={currentUser.username}
           onChange={handleChange}
           className="border bg-slate-100 p-3 rounded-lg"
         ></input>
         <input
-          type="text "
+          type="email "
           placeholder="email"
+          id="email"
           defaultValue={currentUser.email}
           onChange={handleChange}
           className="border bg-slate-100 p-3 rounded-lg"
         ></input>
         <input
-          type="text "
+          type="password"
+          id="password"
           placeholder="password"
-          defaultValue={"**********"}
           onChange={handleChange}
           className="bg-slate-100 p-3 rounded-lg border"
         ></input>
-        <button className="bg-slate-500 p-3 rounded-lg uppercase hover:opacity-95">
-          Update
+        <button
+          disabled={loading}
+          className="bg-slate-500 p-3 rounded-lg uppercase hover:opacity-95"
+        >
+          {loading ? "loading" : "update"}
         </button>
         {/* <button className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95">
           Creat listing
         </button> */}
       </form>
       <div className="mt-5 flex text-red-800 justify-between cursor-pointer colo">
-        <span>Delete Acccount</span>
+        <span onClick={handleDelete}>Delete Acccount</span>
         <span>SignOut</span>
       </div>
       <p className="mt-4 flex justify-center items-center cursor-pointer text-green-700">
         ShowListing
+      </p>
+
+      <p className=" text-red-700 text-sm self-center">{error ? error : ""}</p>
+      <p className="text-green-700 text-sm self-center">
+        {updateUserData ? "Updated Successfully" : ""}
       </p>
     </div>
   );

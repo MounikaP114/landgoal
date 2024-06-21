@@ -58,7 +58,7 @@ export default function SignIn() {
         >
           <input
             className="p-4 bg-slate-100 border rounded-lg w-full focus:outline-none"
-            type="text"
+            type="email"
             id="email"
             placeholder="Email"
             autoComplete="username"

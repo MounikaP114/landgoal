@@ -47,7 +47,6 @@ export default function SignUp() {
 
   return (
     <div className="flex h-dvh">
-      {/* Left side - Login Form */}
       <div className="flex-1 flex flex-col justify-center items-center bg-white">
         <h1 className="text-3xl text-center font-semibold mb-6">Sign Up</h1>
 
@@ -65,7 +64,7 @@ export default function SignUp() {
           />
           <input
             className="p-4 bg-slate-100 border rounded-lg w-full focus:outline-none"
-            type="text"
+            type="email"
             id="email"
             placeholder="Email"
             onChange={handleChange}
@@ -95,7 +94,6 @@ export default function SignUp() {
         {error && <p className="text-red-500">{error}</p>}
       </div>
 
-      {/* Right side - Image */}
       <div className="flex-1">
         <img
           className="h-full w-full "
