@@ -19,7 +19,7 @@ import {
   signInStart,
   signOutFailure,
 } from "../redux/userSlice";
-import Listing from "./Listing";
+import Listing from "./PropertyListing";
 import { Link } from "react-router-dom";
 
 // match /{allPaths=**} {
@@ -195,19 +195,21 @@ export default function Profile() {
         >
           {loading ? "loading" : "update"}
         </button>
-        <button className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95">
-          Create Listing
-        </button>
+        <Link
+          to={"/create-property"}
+          className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95 text-center"
+        >
+          Add Property
+        </Link>
       </form>
       <div className="mt-5 flex text-red-800 justify-between cursor-pointer colo">
         <span onClick={handleDelete}>Delete Acccount</span>
         <span onClick={handleSignOut}>SignOut</span>
       </div>
-      <Link to={<Listing />}>
-        <p className="mt-4 flex justify-center items-center cursor-pointer text-green-700">
-          ShowListing
-        </p>
-      </Link>
+
+      <p className="mt-4 flex justify-center items-center cursor-pointer text-green-700">
+        ShowListing
+      </p>
 
       <p className=" text-red-700 text-sm self-center">{error ? error : ""}</p>
       <p className="text-green-700 text-sm self-center">
