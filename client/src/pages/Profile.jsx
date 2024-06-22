@@ -14,7 +14,13 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signInFailure,
+  signInSuccsess,
+  signInStart,
+  signOutFailure,
 } from "../redux/userSlice";
+import Listing from "./Listing";
+import { Link } from "react-router-dom";
 
 // match /{allPaths=**} {
 //   allow read;
@@ -112,6 +118,22 @@ export default function Profile() {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      dispatch(signInStart());
+      const res = await fetch("/api/signout");
+      const data = await res.json();
+
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+        return;
+      }
+      dispatch(signInSuccsess(data));
+    } catch (error) {
+      dispatch(signOutFailure(data.message));
+    }
+  };
+
   return (
     <div className="p-2 max-w-lg mx-auto">
       <h1 className="m-5 font-semibold text-2xl flex  items-center justify-center">
@@ -173,17 +195,19 @@ export default function Profile() {
         >
           {loading ? "loading" : "update"}
         </button>
-        {/* <button className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95">
-          Creat listing
-        </button> */}
+        <button className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95">
+          Create Listing
+        </button>
       </form>
       <div className="mt-5 flex text-red-800 justify-between cursor-pointer colo">
         <span onClick={handleDelete}>Delete Acccount</span>
-        <span>SignOut</span>
+        <span onClick={handleSignOut}>SignOut</span>
       </div>
-      <p className="mt-4 flex justify-center items-center cursor-pointer text-green-700">
-        ShowListing
-      </p>
+      <Link to={<Listing />}>
+        <p className="mt-4 flex justify-center items-center cursor-pointer text-green-700">
+          ShowListing
+        </p>
+      </Link>
 
       <p className=" text-red-700 text-sm self-center">{error ? error : ""}</p>
       <p className="text-green-700 text-sm self-center">
