@@ -1,10 +1,98 @@
-import React from "react";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import React, { useState } from "react";
+import { app } from "../firebase";
 
 export default function () {
+  const [files, setFiles] = useState([]);
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+  });
+  const [fileUploadError, setFileUploadError] = useState(false);
+  // console.log(files);
+  // console.log(formData);
+
+  const handleSubmit = async () => {
+    try {
+    } catch (error) {}
+  };
+  const handleUploads = async (e) => {
+    if (files.length === 0)
+      return setFileUploadError("please upload atleast one image");
+    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+      const promises = [];
+
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]));
+      }
+      console.log(promises);
+      Promise.all(promises)
+        .then((urls) => {
+          setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.concat(urls),
+          });
+        })
+        .catch((error) => {
+          setFileUploadError("Image files size should be less than 2 Mb");
+        });
+      setFileUploadError(true);
+    } else {
+      setFileUploadError("Only maximum 6 images are allowed");
+    }
+  };
+
+  const storeImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + file.name;
+      console.log(fileName);
+      const storageRef = ref(storage, fileName);
+
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Optional: You can track the progress of the upload here
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+        },
+
+        (error) => {
+          // Handle unsuccessful uploads
+          reject(error);
+        },
+        () => {
+          // Handle successful uploads on complete
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
+
+  const deleteUploadImage = (index) => {
+  setFormData({...formData,
+   imageUrls: formData.imageUrls.filter((_, id)=> id!==index)
+  })
+  };
   return (
     <main className="p-3 max-w-4xl mx-auto ">
-      <h1 className=" text-3xl font-semibold my-4">Add Property Details</h1>
-      <form className="flex flex-col sm:flex-row gap-4">
+      <h1 className=" text-3xl font-semibold my-4 mb-10 text-center">
+        Add Property Details
+      </h1>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col sm:flex-row gap-10"
+      >
+        {/* /* right side */}
         <div className="flex flex-col gap-4 flex-1">
           <input
             type="text"
@@ -18,7 +106,7 @@ export default function () {
             id="description"
             required
             placeholder="Description"
-            className="border rounded-lg  w-full mt-2  h-20"
+            className="border rounded-lg  w-full mt-2  h-20 p-2"
           />
           <input
             type="text"
@@ -101,6 +189,7 @@ export default function () {
                 <input
                   type="number"
                   name="bathrooms"
+                  id="bathrooms"
                   className="border w-10 h-10 mr-1"
                 />
                 Bath Rooms
@@ -110,35 +199,65 @@ export default function () {
                 <input
                   type="number"
                   name="regularprice"
-                  className="border w-10 h-10 mr-1"
+                  id="regularprice"
+                  className="border w-20 h-10 mr-1 p-2"
                 />
-                Regular Price (/months)
+                Regular Price ($/months)
               </label>
               <label htmlFor="discoountedprice">
                 <input
                   type="number"
                   name="discoountedprice"
-                  className="border w-10 h-10 mr-1"
+                  id="discountedprice"
+                  className="border w-20 h-10 mr-1 p-2"
                 />
-                Discounted Price (/months)
+                Discounted Price
               </label>
             </div>
           </div>
         </div>
-        {/* // right side */}
+        {/* /* // right outline-green-600 side */}
         <div className="flex flex-col flex-1 gap-5">
           <p className="">
-            <span className="font-extrabold ">Images: </span>the first immage
-            will the cover(max 6)
+            <span className="font-extrabold ">Images: </span>the first image is
+            the cover(max 6)
           </p>
-
           <div className="flex gap-max">
-            <input type="file" className="my-2"></input>
-            <span className=" border-green-700 hover:shadow-lg text-green-800 p-2">
+            <input
+              type="file"
+              id="image"
+              className="my-2 border p-2"
+              multiple
+              accept="image/*"
+              onChange={(e) => setFiles(e.target.files)}
+            ></input>
+            <button
+              type="button"
+              onClick={handleUploads}
+              className=" hover:shadow-lg text-green-800 w-20 h-10 mt-3 text-center p-1 rounded-lg"
+            >
               upload
-            </span>
+            </button>
           </div>
-          <button className="bg-slate-700 border p-3 w-7/12 self-center hover:bg-slate-600">
+          {formData.imageUrls.map((url, index) => (
+            <div key={url} className=" flex justify-between gap-10 items-center text-center ">
+              <img
+                className="w-20 h-20 rounded-lg object-contain"
+                src={url}
+                alt="upload-image"
+              ></img>
+              <button
+                type="button"
+                id="delete"
+                onClick={()=>deleteUploadImage(index)}
+                className=" border hover:bg-red-700 bg-red-600 p-2 rounded-lg"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+          <p className="text-red-700">{fileUploadError && fileUploadError}</p>
+          <button className="bg-slate-700 border p-3 w-7/12 self-center hover:bg-slate-600 rounded-lg">
             Add Property
           </button>
         </div>

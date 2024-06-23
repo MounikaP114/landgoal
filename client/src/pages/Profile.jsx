@@ -38,10 +38,10 @@ export default function Profile() {
   const [updateUserData, setUpdateUserData] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(file);
-  console.log(fileUploadProgress);
-  console.log(fileUploadError);
-  console.log(formData);
+  // console.log(file);
+  // console.log(fileUploadProgress);
+  // console.log(fileUploadError);
+  // console.log(formData);
 
   useEffect(() => {
     if (file) {
