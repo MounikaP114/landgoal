@@ -21,6 +21,7 @@ import {
 } from "../redux/userSlice";
 import Listing from "./PropertyListing";
 import { Link } from "react-router-dom";
+import { TbUserEdit } from "react-icons/tb";
 
 // match /{allPaths=**} {
 //   allow read;
@@ -36,12 +37,17 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateUserData, setUpdateUserData] = useState(false);
+  const [listProperties, setListProperties] = useState([]);
+  const [listPropertiesError, setListPropertiesError] = useState(false);
+  const [loadingList, setLoadingList] = useState(false);
   const dispatch = useDispatch();
 
   // console.log(file);
   // console.log(fileUploadProgress);
   // console.log(fileUploadError);
   // console.log(formData);
+  console.log(listProperties);
+  // console.log(currentUser._id);
 
   useEffect(() => {
     if (file) {
@@ -134,6 +140,31 @@ export default function Profile() {
     }
   };
 
+  const handlePropertyList = async () => {
+    try {
+      setListPropertiesError(false);
+      setLoadingList(true);
+      const res = await fetch(`/api/properties-list/${currentUser._id}`);
+      const data = await res.json();
+
+      if (data.success === false) {
+        setFileUploadError(data.message);
+        setLoadingList(true);
+        return;
+      }
+      setListProperties(data);
+    } catch (error) {
+      setFileUploadError(error.message);
+      setLoadingList(true);
+    }
+  };
+
+  const deleteProperty= (e)=>{
+
+  }
+  const editProperty = ()=>{
+
+  }
   return (
     <div className="p-2 max-w-lg mx-auto">
       <h1 className="m-5 font-semibold text-2xl flex  items-center justify-center">
@@ -207,14 +238,31 @@ export default function Profile() {
         <span onClick={handleSignOut}>SignOut</span>
       </div>
 
-      <p className="mt-4 flex justify-center items-center cursor-pointer text-green-700">
-        ShowListing
-      </p>
-
       <p className=" text-red-700 text-sm self-center">{error ? error : ""}</p>
       <p className="text-green-700 text-sm self-center">
         {updateUserData ? "Updated Successfully" : ""}
       </p>
+      <button
+        type="button"
+        disabled={loading}
+        onClick={handlePropertyList}
+        className="mt-4 cursor-pointer text-green-700"
+      >
+        {loadingList ? "Loading..." : "Show list Properties"}
+      </button>
+       {listProperties.map((list) => 
+        <div
+          key={list._id}
+          className="flex gap-3 rounded-lg border justify-between items-center bg-slate-100 hover:shadow-xl w-full m-3 ">
+          <img src={list.imageUrls[0]} alt="property-image" className=" h-20 w-20 object-fill rounded-lg m-3" />
+          <p className=" text-lg text-slate-700">{list.name}</p>
+          <div className="flex flex-col p-2 m-2">
+            <button onClick={deleteProperty(list._id)} className='m-1 border bg-red-500 p-1 rounded-lg' >Delete</button>
+            <button onClick={editProperty(list._id)} className='m-1 border bg-green-500 p-1 rounded-lg' >edit</button>
+          </div>
+        </div>  
+      )} 
+      <p>{listPropertiesError ? "Please Check and try  again" : ""}</p>
     </div>
   );
 }

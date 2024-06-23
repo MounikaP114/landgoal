@@ -34,7 +34,7 @@ export default function PropertyListing() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [uploading, setUloading] = useState(false);
   // console.log(files);
-  console.log(formData);
+  // console.log(formData);
 
   const handleUploads = async (e) => {
     if (files.length === 0)
@@ -152,8 +152,10 @@ export default function PropertyListing() {
         body: JSON.stringify({ ...formData, userRef: currentUser._id }),
       });
       const data = await res.json();
-      setLoading(false);
+
+      console.log(data);
       if (data.success === false) {
+        setLoading(false);
         setError(data.message);
       }
       navigate(`/properties/${data._id}`);
