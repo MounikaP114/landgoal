@@ -1,6 +1,7 @@
 import User from "../models/user-model.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
+import Property from "../models/property-model.js";
 
 export const user = (req, res) => {
   res.json({
@@ -44,4 +45,18 @@ export const deleteUserInfo = async (req, res, next) => {
   await User.findByIdAndDelete(req.params.id);
   res.clearCookie("access_token");
   res.status(200).json("User account deleted successfully");
+};
+
+export const getUserListProperties = async (req, res, next) => {
+  if (req.user.id === req.params.id) {
+    try {
+      const data = await Property.find({ userRef: req.params.id });
+
+      res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    return next(errorHandler(401, "You can only view Own Propeties list"));
+  }
 };
