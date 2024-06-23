@@ -19,7 +19,7 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
-          <Route path="/create-property" element={<PropertyListing />}></Route>
+          <Route path="/create" element={<PropertyListing />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

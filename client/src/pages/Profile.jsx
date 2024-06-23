@@ -196,7 +196,7 @@ export default function Profile() {
           {loading ? "loading" : "update"}
         </button>
         <Link
-          to={"/create-property"}
+          to={"/create"}
           className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95 text-center"
         >
           Add Property
