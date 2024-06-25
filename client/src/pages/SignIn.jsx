@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
   signInFailure,
-  signInSuccsess,
+  signInSuccess,
 } from "../redux/userSlice.js";
 import Oauth from "../components/Oauth";
 
@@ -38,8 +38,8 @@ export default function SignIn() {
         dispatch(signInFailure(data.message));
         return;
       }
-      dispatch(signInSuccsess(data));
-      navigate("/");
+      dispatch(signInSuccess(data));
+      navigate("/sign");
       // Handle successful response here
     } catch (error) {
       dispatch(signInFailure(error.message));

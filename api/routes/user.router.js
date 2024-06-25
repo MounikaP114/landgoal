@@ -12,4 +12,5 @@ router.post("/update/:id", verifyToken, updateUserInfo);
 router.delete("/delete/:id", verifyToken, deleteUserInfo);
 router.get("/properties-list/:id", verifyToken, getUserListProperties);
 
+
 export default router;

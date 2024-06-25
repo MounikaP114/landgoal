@@ -15,13 +15,14 @@ import {
   deleteUserSuccess,
   deleteUserFailure,
   signInFailure,
-  signInSuccsess,
+  signInSuccess,
   signInStart,
+  signOutStart,
   signOutFailure,
+  signOutSuccess,
 } from "../redux/userSlice";
-import Listing from "./PropertyListing";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { TbUserEdit } from "react-icons/tb";
 
 // match /{allPaths=**} {
 //   allow read;
@@ -40,13 +41,15 @@ export default function Profile() {
   const [listProperties, setListProperties] = useState([]);
   const [listPropertiesError, setListPropertiesError] = useState(false);
   const [loadingList, setLoadingList] = useState(false);
+  const [deletePropertyError, setDeletePropertyError] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   // console.log(file);
   // console.log(fileUploadProgress);
   // console.log(fileUploadError);
   // console.log(formData);
-  console.log(listProperties);
+  //console.log(listProperties);
   // console.log(currentUser._id);
 
   useEffect(() => {
@@ -104,10 +107,15 @@ export default function Profile() {
       }
       dispatch(updateUserSuccess(data));
       setUpdateUserData(true);
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
     } catch (error) {
       dispatch(updateUserFailure(error.message));
     }
   };
+
   const handleDelete = async () => {
     try {
       const res = await fetch(`/api/delete/${currentUser._id}`, {
@@ -126,17 +134,18 @@ export default function Profile() {
 
   const handleSignOut = async () => {
     try {
-      dispatch(signInStart());
+      dispatch(signOutStart());
       const res = await fetch("/api/signout");
       const data = await res.json();
 
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+        dispatch(signOutFailure(data.message));
         return;
       }
-      dispatch(signInSuccsess(data));
+      navigate("/signin");
+      dispatch(signOutSuccess(data));
     } catch (error) {
-      dispatch(signOutFailure(data.message));
+      dispatch(signOutFailure(error.message));
     }
   };
 
@@ -149,22 +158,34 @@ export default function Profile() {
 
       if (data.success === false) {
         setFileUploadError(data.message);
-        setLoadingList(true);
+        setLoadingList(flase);
         return;
       }
       setListProperties(data);
+      setLoadingList(false);
     } catch (error) {
       setFileUploadError(error.message);
-      setLoadingList(true);
+      setLoadingList(false);
     }
   };
 
-  const deleteProperty= (e)=>{
-
-  }
-  const editProperty = ()=>{
-
-  }
+  const deleteProperty = async (propertyid) => {
+    try {
+      const res = await fetch(`/api/properties/delete/${propertyid}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setDeletePropertyError(data.message);
+        return;
+      }
+      setListProperties((prev) =>
+        prev.filter((item) => propertyid !== item._id)
+      );
+    } catch (error) {
+      setDeletePropertyError(error.message);
+    }
+  };
   return (
     <div className="p-2 max-w-lg mx-auto">
       <h1 className="m-5 font-semibold text-2xl flex  items-center justify-center">
@@ -226,6 +247,11 @@ export default function Profile() {
         >
           {loading ? "loading" : "update"}
         </button>
+        {showMessage && (
+          <p className="text-green-700 self-center font-semibold">
+            Updated Successfully
+          </p>
+        )}
         <Link
           to={"/create"}
           className=" bg-green-500 p-3 rounded-lg uppercase hover:opacity-95 text-center"
@@ -233,36 +259,50 @@ export default function Profile() {
           Add Property
         </Link>
       </form>
-      <div className="mt-5 flex text-red-800 justify-between cursor-pointer colo">
-        <span onClick={handleDelete}>Delete Acccount</span>
-        <span onClick={handleSignOut}>SignOut</span>
-      </div>
-
-      <p className=" text-red-700 text-sm self-center">{error ? error : ""}</p>
-      <p className="text-green-700 text-sm self-center">
-        {updateUserData ? "Updated Successfully" : ""}
-      </p>
       <button
         type="button"
         disabled={loading}
         onClick={handlePropertyList}
-        className="mt-4 cursor-pointer text-green-700"
+        className="mt-4 cursor-pointer text-slate-900  bg-blue-400 w-full  p-3 rounded-lg"
       >
         {loadingList ? "Loading..." : "Show list Properties"}
       </button>
-       {listProperties.map((list) => 
+      <div className="mt-5 flex text-red-800 justify-between cursor-pointer colo">
+        <span onClick={handleDelete}>Delete Acccount</span>
+        <span onClick={handleSignOut}>SignOut</span>
+      </div>
+      <p className=" text-red-700 text-sm self-center">{error ? error : ""}</p>
+      <p className="text-green-700 text-sm self-center"></p>
+      <p>{listPropertiesError ? "Please Check and try  again" : ""}</p>
+      <p className="text-red-700 text-sm mt-3">
+        {deletePropertyError && deletePropertyError}
+      </p>
+      {listProperties.map((list) => (
         <div
           key={list._id}
-          className="flex gap-3 rounded-lg border justify-between items-center bg-slate-100 hover:shadow-xl w-full m-3 ">
-          <img src={list.imageUrls[0]} alt="property-image" className=" h-20 w-20 object-fill rounded-lg m-3" />
+          className="flex gap-3 rounded-lg border justify-between items-center bg-slate-100 hover:shadow-xl w-full m-3 "
+        >
+          <img
+            src={list.imageUrls[0]}
+            alt="property-image"
+            className=" h-20 w-20 object-fill rounded-lg m-3"
+          />
           <p className=" text-lg text-slate-700">{list.name}</p>
           <div className="flex flex-col p-2 m-2">
-            <button onClick={deleteProperty(list._id)} className='m-1 border bg-red-500 p-1 rounded-lg' >Delete</button>
-            <button onClick={editProperty(list._id)} className='m-1 border bg-green-500 p-1 rounded-lg' >edit</button>
+            <button
+              onClick={() => deleteProperty(list._id)}
+              className="m-1 border bg-red-500 p-1 rounded-lg"
+            >
+              Delete
+            </button>
+            <Link to={`/update-property/${list._id}`}>
+              <button type="button" className="m-1 border bg-green-500 p-1 rounded-lg">
+                edit
+              </button>
+            </Link>
           </div>
-        </div>  
-      )} 
-      <p>{listPropertiesError ? "Please Check and try  again" : ""}</p>
+        </div>
+      ))}
     </div>
   );
 }
