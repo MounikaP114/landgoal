@@ -29,7 +29,7 @@ export default function PropertyListing() {
     parking: false,
     furnished: false,
     type: "rent",
-    offers: true,
+    offers: false,
   });
   const [fileUploadError, setFileUploadError] = useState(false);
   const [uploading, setUloading] = useState(false);
@@ -125,11 +125,11 @@ export default function PropertyListing() {
       e.target.id === "furnished" ||
       e.target.id === "hall" ||
       e.target.id === "kitchen" ||
-      e.target.id == "offers"
+      e.target.id === "offers"
     ) {
       setFormData({
         ...formData,
-        [e.target.id]: e.target.checked,
+        [e.target.id]: e.target.checked
       });
     }
   };
@@ -212,46 +212,47 @@ export default function PropertyListing() {
                   id="sale"
                   className="mr-2"
                   onChange={handleChange}
-                  value={formData.type}
+                  checked={formData.type==='sale'}
                 />
                 Sale
               </label>
 
-              <label htmlFor="rent">
+              <div>
                 <input
                   type="checkbox"
                   name="rent"
                   id="rent"
+                
                   className="mr-2"
                   onChange={handleChange}
-                  value={formData.type}
+                  checked={formData.type==='rent'}
                 />
                 Rent
-              </label>
+              </div>
 
-              <label htmlFor="parking">
+              <div>
                 <input
                   type="checkbox"
                   name="parking"
                   id="parking"
                   className="mr-2"
                   onChange={handleChange}
-                  value={formData.parking}
+                  checked={formData.parking}
                 />
                 Parking Spot
-              </label>
+              </div>
 
-              <label htmlFor="furnished">
+              <div >
                 <input
                   type="checkbox"
                   name="furnished"
                   id="furnished"
                   className="mr-2"
                   onChange={handleChange}
-                  value={formData.furnished}
+                  checked={formData.furnished}
                 />
                 Furnished
-              </label>
+              </div>
 
               <label htmlFor="offers">
                 <input
@@ -260,7 +261,7 @@ export default function PropertyListing() {
                   id="offers"
                   className="mr-2"
                   onChange={handleChange}
-                  value={formData.offers}
+                  checked={formData.offers}
                 />
                 Offers
               </label>
@@ -272,7 +273,7 @@ export default function PropertyListing() {
                   id="kitchen"
                   className="mr-2"
                   onChange={handleChange}
-                  value={formData.kitchen}
+                  checked={formData.kitchen}
                 />
                 Kitchen
               </label>
@@ -284,7 +285,7 @@ export default function PropertyListing() {
                   id="hall"
                   className="mr-2"
                   onChange={handleChange}
-                  value={formData.hall}
+                  checked={formData.hall}
                 />
                 Hall
               </label>

@@ -178,7 +178,7 @@ export default function UpdatePropertyInfo() {
         setLoading(false);
         setError(data.message);
       }
-      navigate(`/properties/${data._id}`);
+      navigate(`/properties/${params.propertyid}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);

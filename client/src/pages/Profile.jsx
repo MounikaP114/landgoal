@@ -21,7 +21,7 @@ import {
   signOutFailure,
   signOutSuccess,
 } from "../redux/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 // match /{allPaths=**} {
@@ -45,6 +45,7 @@ export default function Profile() {
   const [showMessage, setShowMessage] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const params=useParams()
   // console.log(file);
   // console.log(fileUploadProgress);
   // console.log(fileUploadError);
@@ -287,7 +288,9 @@ export default function Profile() {
             alt="property-image"
             className=" h-20 w-20 object-fill rounded-lg m-3"
           />
-          <p className=" text-lg text-slate-700">{list.name}</p>
+          <Link to={`/properties/${list._id}`}>
+          <p className=" text-lg text-slate-700 hover:underline">{list.name}</p></Link>
+         
           <div className="flex flex-col p-2 m-2">
             <button
               onClick={() => deleteProperty(list._id)}
