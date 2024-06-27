@@ -20,7 +20,7 @@ export default function PropertyListing() {
     name: "",
     description: "",
     address: "",
-    regularPrice: 0,
+    regularPrice: 1000,
     discountPrice: 0,
     bathRooms: 0,
     bedRooms: 0,
@@ -129,7 +129,7 @@ export default function PropertyListing() {
     ) {
       setFormData({
         ...formData,
-        [e.target.id]: e.target.checked
+        [e.target.id]: e.target.checked,
       });
     }
   };
@@ -212,7 +212,7 @@ export default function PropertyListing() {
                   id="sale"
                   className="mr-2"
                   onChange={handleChange}
-                  checked={formData.type==='sale'}
+                  checked={formData.type === "sale"}
                 />
                 Sale
               </label>
@@ -222,10 +222,9 @@ export default function PropertyListing() {
                   type="checkbox"
                   name="rent"
                   id="rent"
-                
                   className="mr-2"
                   onChange={handleChange}
-                  checked={formData.type==='rent'}
+                  checked={formData.type === "rent"}
                 />
                 Rent
               </div>
@@ -242,7 +241,7 @@ export default function PropertyListing() {
                 Parking Spot
               </div>
 
-              <div >
+              <div>
                 <input
                   type="checkbox"
                   name="furnished"

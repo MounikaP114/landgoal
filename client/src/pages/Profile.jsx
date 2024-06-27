@@ -21,7 +21,7 @@ import {
   signOutFailure,
   signOutSuccess,
 } from "../redux/userSlice";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 // match /{allPaths=**} {
@@ -45,7 +45,7 @@ export default function Profile() {
   const [showMessage, setShowMessage] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params=useParams()
+  const params = useParams();
   // console.log(file);
   // console.log(fileUploadProgress);
   // console.log(fileUploadError);
@@ -93,7 +93,7 @@ export default function Profile() {
     try {
       dispatch(updateUserStart());
 
-      const res = await fetch(`/api/update/${currentUser._id}`, {
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export default function Profile() {
 
   const handleDelete = async () => {
     try {
-      const res = await fetch(`/api/delete/${currentUser._id}`, {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
       });
       const data = res.json();
@@ -136,7 +136,7 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutStart());
-      const res = await fetch("/api/signout");
+      const res = await fetch("/api/auth/signout");
       const data = await res.json();
 
       if (data.success === false) {
@@ -154,7 +154,7 @@ export default function Profile() {
     try {
       setListPropertiesError(false);
       setLoadingList(true);
-      const res = await fetch(`/api/properties-list/${currentUser._id}`);
+      const res = await fetch(`/api/user/properties-list/${currentUser._id}`);
       const data = await res.json();
 
       if (data.success === false) {
@@ -289,8 +289,11 @@ export default function Profile() {
             className=" h-20 w-20 object-fill rounded-lg m-3"
           />
           <Link to={`/properties/${list._id}`}>
-          <p className=" text-lg text-slate-700 hover:underline">{list.name}</p></Link>
-         
+            <p className=" text-lg text-slate-700 hover:underline">
+              {list.name}
+            </p>
+          </Link>
+
           <div className="flex flex-col p-2 m-2">
             <button
               onClick={() => deleteProperty(list._id)}
@@ -299,7 +302,10 @@ export default function Profile() {
               Delete
             </button>
             <Link to={`/update-property/${list._id}`}>
-              <button type="button" className="m-1 border bg-green-500 p-1 rounded-lg">
+              <button
+                type="button"
+                className="m-1 border bg-green-500 p-1 rounded-lg"
+              >
                 edit
               </button>
             </Link>
