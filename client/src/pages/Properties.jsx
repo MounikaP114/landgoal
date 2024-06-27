@@ -5,6 +5,7 @@ import SwiperCore from "swiper";
 import { useSelector } from "react-redux";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
+import Contact from "../components/Contact";
 import {
   FaBath,
   FaBed,
@@ -16,8 +17,6 @@ import {
   FaShare,
   FaTv,
 } from "react-icons/fa";
-import { FaKitchenSet } from "react-icons/fa6";
-
 
 // https://sabe.io/blog/javascript-format-numbers-commas#:~:text=The%20best%20way%20to%20format,format%20the%20number%20with%20commas.
 
@@ -30,22 +29,23 @@ export default function Properties() {
   const [contact, setContact] = useState(false);
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
-    //console.log(listing)
-    // console.log(listing.bathRooms)
-    // imageUrls: [],
-    // name: "",
-    // description: "",
-    // address: "",
-    // regularPrice: 0,
-    // discountPrice: 0,
-    // bathRooms: 0,
-    // bedRooms: 0,
-    // kitchen: false,
-    // hall: false,
-    // parking: false,
-    // furnished: false,
-    // type: "rent",
-    // offers: true,
+ // console.log(currentUser._id, listing.userRef)
+  //console.log(listing)
+  // console.log(listing.bathRooms)
+  // imageUrls: [],
+  // name: "",
+  // description: "",
+  // address: "",
+  // regularPrice: 0,
+  // discountPrice: 0,
+  // bathRooms: 0,
+  // bedRooms: 0,
+  // kitchen: false,
+  // hall: false,
+  // parking: false,
+  // furnished: false,
+  // type: "rent",
+  // offers: true,
   useEffect(() => {
     const fetchListing = async () => {
       try {
@@ -109,7 +109,7 @@ export default function Properties() {
           <div className="flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4">
             <p className="text-2xl font-semibold">
               {listing.name} - ${" "}
-              {listing.offer
+              {listing.offers
                 ? listing.discountPrice.toLocaleString("en-US")
                 : listing.regularPrice.toLocaleString("en-US")}
               {listing.type === "rent" && " / month"}
@@ -122,7 +122,7 @@ export default function Properties() {
               <p className="bg-red-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
                 {listing.type === "rent" ? "For Rent" : "For Sale"}
               </p>
-              {listing.offer && (
+              {listing.offers && (
                 <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
                   ${+listing.regularPrice - +listing.discountPrice} OFF
                 </p>
@@ -159,15 +159,12 @@ export default function Properties() {
                     </FaLocationCrosshairs>
               </li> */}
             </ul>
-            {/* {currentUser && listing.userRef !== currentUser._id && !contact && (
-              <button
-                onClick={() => setContact(true)}
-                className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3"
-              >
-                Contact landlord
+            {currentUser && currentUser._id !== listing.userRef && !contact &&(
+              <button onClick={()=>setContact(true)} className="text-white rounded-lg p-3 hover:bg-slate-600 bg-slate-700">
+                Contact LandLord
               </button>
             )}
-            {contact && <Contact listing={listing} />} */}
+            {contact && <Contact listing={listing}/>}
           </div>
         </div>
       )}
