@@ -33,8 +33,8 @@ export default function PropertyListing() {
   });
   const [fileUploadError, setFileUploadError] = useState(false);
   const [uploading, setUloading] = useState(false);
-  // console.log(files);
-  // console.log(formData);
+  console.log(files);
+  console.log(formData);
 
   const handleUploads = async (e) => {
     if (files.length === 0)
@@ -71,7 +71,7 @@ export default function PropertyListing() {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app);
       const fileName = new Date().getTime() + file.name;
-      console.log(fileName);
+      ///console.log(fileName);
       const storageRef = ref(storage, fileName);
 
       const uploadTask = uploadBytesResumable(storageRef, file);
