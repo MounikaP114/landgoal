@@ -1,8 +1,5 @@
-import React, { useState } from "react";
-<<<<<<< HEAD
-import { Navigate, useNavigate } from "react-router-dom";
-=======
->>>>>>> 43d7f767162b6ff3b6aeba70f3010858dc2cfa4b
+import React, { useEffect, useState } from "react";
+import {useNavigate } from "react-router-dom";
 
 export default function Search() {
   const [filter, setFilter] = useState({
@@ -14,12 +11,63 @@ export default function Search() {
     sort: "createAt",
     order: "desc",
   });
-<<<<<<< HEAD
   const navigate = useNavigate();
-  console.log(filter);
-=======
-  console.log(filter)
->>>>>>> 43d7f767162b6ff3b6aeba70f3010858dc2cfa4b
+  //console.log(filter);
+
+  const [loading, setLoading] = useState(false);
+  const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
+
+  //console.log(listings)
+  
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    const typeFromUrl = urlParams.get("type");
+    const parkingFromUrl = urlParams.get("parking");
+    const furnishedFromUrl = urlParams.get("furnished");
+    const offerFromUrl = urlParams.get("offer");
+    const sortFromUrl = urlParams.get("sort");
+    const orderFromUrl = urlParams.get("order");
+
+    if (
+      searchTermFromUrl ||
+      typeFromUrl ||
+      parkingFromUrl ||
+      furnishedFromUrl ||
+      offerFromUrl ||
+      sortFromUrl ||
+      orderFromUrl
+    ) {
+      setFilter({
+        searchTerm: searchTermFromUrl || "",
+        type: typeFromUrl || "all",
+        parking: parkingFromUrl === "true" ? true : false,
+        furnished: furnishedFromUrl === "true" ? true : false,
+        offer: offerFromUrl === "true" ? true : false,
+        sort: sortFromUrl || "created_at",
+        order: orderFromUrl || "desc",
+      });
+    }
+
+    const fetchListings = async () => {
+      setLoading(true);
+      setShowMore(false);
+      const searchQuery = urlParams.toString();
+      const res = await fetch(`/api/properties/get?${searchQuery}`);
+      const data = await res.json();
+      if (data.length > 8) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
+      setListings(data);
+      setLoading(false);
+    };
+
+    fetchListings();
+  }, [location.search]);
+
   const handleChange = (e) => {
     if (
       e.target.id == "all" ||
@@ -48,7 +96,6 @@ export default function Search() {
           e.target.checked || e.target.checked === "true" ? "true" : "false",
       });
     }
-<<<<<<< HEAD
     if (e.target.id === "sort_order") {
       const sort = e.target.value.split("_")[0] || "created_at";
 
@@ -57,6 +104,7 @@ export default function Search() {
       setSidebardata({ ...sidebardata, sort, order });
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams();
@@ -70,24 +118,18 @@ export default function Search() {
 
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
-=======
-    if (e.target.id === 'sort_order') {
-        const sort = e.target.value.split('_')[0] || 'created_at';
-  
-        const order = e.target.value.split('_')[1] || 'desc';
-  
-        setSidebardata({ ...sidebardata, sort, order });
-      }
->>>>>>> 43d7f767162b6ff3b6aeba70f3010858dc2cfa4b
+    if (e.target.id === "sort_order") {
+      const sort = e.target.value.split("_")[0] || "created_at";
+
+      const order = e.target.value.split("_")[1] || "desc";
+
+      setSidebardata({ ...sidebardata, sort, order });
+    }
   };
   return (
     <div className="flex flex-col md:flex-row ">
       <div className=" p-7 border-b-2 md:border-r-2  h-full">
-<<<<<<< HEAD
         <form onSubmit={handleSubmit} className=" flex flex-col gap-3">
-=======
-        <form onSubmit="" className=" flex flex-col gap-3">
->>>>>>> 43d7f767162b6ff3b6aeba70f3010858dc2cfa4b
           <div className=" flex gap-2 items-center">
             <label className="whitespace-nowrap font-semibold">
               Search Term:
@@ -173,17 +215,10 @@ export default function Search() {
               className="border rounded-lg p-3"
               defaultValue={"created_at_desc"}
             >
-<<<<<<< HEAD
               <option value="regularPrice_desc">Price high to low</option>
               <option value="regularPrice_asc">Price low to high</option>
               <option value="createdAt_desc">Latest</option>
               <option value="createdAt_asc">Oldest</option>
-=======
-              <option value='regularPrice_desc'>Price high to low</option>
-              <option value='regularPrice_asc'>Price low to high</option>
-              <option value='createdAt_desc'>Latest</option>
-              <option value='createdAt_asc'>Oldest</option>
->>>>>>> 43d7f767162b6ff3b6aeba70f3010858dc2cfa4b
             </select>
           </div>
           <button className=" bg-slate-700 hover:opacity-95 w-full rounded-lg p-2 text-white text-lg">
@@ -191,7 +226,6 @@ export default function Search() {
           </button>
         </form>
       </div>
-
       <div className="">
         <h1 className="text-2xl p-7 font-semibold">Properties Results</h1>
       </div>

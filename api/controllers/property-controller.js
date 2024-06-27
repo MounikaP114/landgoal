@@ -85,7 +85,7 @@ export const getPropertys = async (req, res, next) => {
 
     const order = req.query.order || "desc";
 
-    const listings = await Listing.find({
+    const listings = await Property.find({
       name: { $regex: searchTerm, $options: "i" },
       offer,
       furnished,
