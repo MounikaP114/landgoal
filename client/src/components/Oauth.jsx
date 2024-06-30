@@ -42,15 +42,14 @@ export default function Oauth() {
   };
 
   return (
-<div className="flex w-full">
-     
+    <div className=" w-full">
       <button
         onClick={handleGoogle}
         disabled={loading}
         type="button"
-        className=" flex bg bg-slate-100 p-3 rounded-lg w-full hover:opacity-95 justify-center"
+        className=" flex bg bg-slate-100 p-3 rounded-lg w-full justify-center"
       >
-            <FcGoogle size={35}></FcGoogle>
+        <FcGoogle size={35} className="p-1"></FcGoogle> Google
       </button>
     </div>
   );
