@@ -44,42 +44,27 @@ export default function Properties() {
     };
     fetchListing();
   }, [params.propertyid]);
-  const getUserLocation = () => {
+
+  const handleClick = () => {
+    // Ensure the browser supports geolocation
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ latitude, longitude });
-        },
-        (error) => {
-          console.error("Error getting user location:", error);
-          // Handle error (e.g., show message to user)
-        }
-      );
+      navigator.geolocation.getCurrentPosition((position) => {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+
+        const propertyAddress = ` ${listing.city}, ${listing.state} ${listing.zip}`;
+        const mapsURL = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLon}&destination=${encodeURIComponent(
+          propertyAddress
+        )}&travelmode=driving`;
+
+        // Open Google Maps with the route
+        window.open(mapsURL, "_blank", "noopener noreferrer");
+      });
     } else {
-      console.error("Geolocation is not supported by this browser.");
-      // Handle unsupported geolocation (e.g., show message to user)
+      alert("Geolocation is not supported by your browser.");
     }
   };
 
-  // Function to open Go Land app if available, otherwise open Google Maps
-  const handleOpenNavigation = () => {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-
-    const propertyAddress = encodeURI(
-      `${listing.address}, ${listing.city}, ${listing.state}, ${listing.zip}`
-    );
-    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${propertyAddress}&travelmode=driving`;
-
-    window.location.href = googleMapsUrl;
-  };
-
-  useEffect(() => {
-    // Fetch user location on component mount
-    
-    getUserLocation();
-  }, []);
   return (
     <main>
       {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
@@ -122,14 +107,14 @@ export default function Properties() {
             <p className="text-2xl font-semibold">
               {listing.name} - ${" "}
               {listing.offer
-                ? listing.regularPrice.toLocaleString("en-US")
-                : listing.discountPrice.toLocaleString("en-US")}
+                ? listing.discountPrice.toLocaleString("en-US")
+                : listing.regularPrice.toLocaleString("en-US")}
               {listing.type === "rent" && " / month"}
             </p>
 
             <p
               className="flex items-center mt-6 gap-2 text-slate-600 text-sm cursor-pointer"
-              onClick={handleOpenNavigation}
+              onClick={handleClick}
             >
               <FaMapMarkerAlt className="text-green-700 gap-3" />
               {listing.address} {listing.city} {listing.state} {listing.zip}{" "}
@@ -145,6 +130,8 @@ export default function Properties() {
                 </p>
               )}
             </div>
+
+            
             <p className="text-slate-800">
               <span className="font-semibold text-black">Description - </span>
               {listing.description}

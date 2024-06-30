@@ -80,6 +80,7 @@ export default function SignIn() {
           </button>
           <Oauth />
         </form>
+        {/** Sing in with google Button */}
         <div className="flex mt-4">
           <p className="pr-5">Dont Have an account? </p>
           <Link to={"/signup"}>
@@ -90,7 +91,7 @@ export default function SignIn() {
       </div>
 
       {/* Right side - Image */}
-      <div className=" flex-[6_6_0%]">
+      <div className=" flex-[7_7_0%]">
         <img
           className="h-full w-full "
           src="https://images.pexels.com/photos/7599735/pexels-photo-7599735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"

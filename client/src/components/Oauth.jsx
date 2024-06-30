@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { signInSuccess } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 
 export default function Oauth() {
   const dispatch = useDispatch();
@@ -41,14 +42,15 @@ export default function Oauth() {
   };
 
   return (
-    <div className="flex w-full">
+<div className="flex w-full">
+     
       <button
         onClick={handleGoogle}
         disabled={loading}
         type="button"
-        className="bg bg-slate-100 p-3 rounded-lg w-full hover:opacity-95"
+        className=" flex bg bg-slate-100 p-3 rounded-lg w-full hover:opacity-95 justify-center"
       >
-        Continue with Google
+            <FcGoogle size={35}></FcGoogle>
       </button>
     </div>
   );
