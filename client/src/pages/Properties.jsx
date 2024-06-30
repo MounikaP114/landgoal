@@ -114,7 +114,7 @@ export default function Properties() {
 
             <p
               className="flex items-center mt-6 gap-2 text-slate-600 text-sm cursor-pointer"
-              onClick={handleClick}
+              // onClick={handleClick}
             >
               <FaMapMarkerAlt className="text-green-700 gap-3" />
               {listing.address} {listing.city} {listing.state} {listing.zip}{" "}
