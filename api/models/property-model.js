@@ -14,6 +14,18 @@ const propertyModel = new mongoose.Schema(
       type: String,
       require: true,
     },
+    city:{
+      type:String,
+      require:true,
+    },
+    state:{
+      type:String,
+      require:true
+    },
+    zip:{
+      type:Number,
+      require:true
+    },
     regularPrice: {
       type: Number,
       require: true,

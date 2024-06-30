@@ -49,7 +49,7 @@ export default function SignIn() {
   return (
     <div className="flex h-dvh">
       {/* Left side - Login Form */}
-      <div className="flex-1 flex flex-col justify-center items-center bg-white">
+      <div className="flex-[3_3_0%] flex flex-col justify-center items-center bg-white">
         <h1 className="text-3xl text-center font-semibold mb-6">Sign In</h1>
 
         <form
@@ -90,7 +90,7 @@ export default function SignIn() {
       </div>
 
       {/* Right side - Image */}
-      <div className="flex-1">
+      <div className=" flex-[6_6_0%]">
         <img
           className="h-full w-full "
           src="https://images.pexels.com/photos/7599735/pexels-photo-7599735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"

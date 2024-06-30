@@ -13,19 +13,20 @@ export default function Header() {
     urlParams.set("searchTerm", searchTerm);
     const quaryString = urlParams.toString();
     navigate(`/search?${quaryString}`);
-  };  
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl= urlParams.get('searchTerm')
-    if(searchTermFromUrl){
-  return  setSearchTerm(searchTermFromUrl)}
-  },[location.search])  
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
   return (
-    <header className=" bg-slate-200 shadow-md">
-      <div className="flex justify-between items-center max-w-screen-2xl mx-auto p-3">
+    <header className=" bg-slate-200 shadow-md w-full fixed top-0 left-0 z-50 ">
+      <div className="flex justify-between items-center max-w-screen-4xl mx-auto m-1">
         <Link to="/">
-          <h1 className=" font-bold text-sm sm:text-2xl flex flex-wrap">
+          <h1 className=" font-bold text-sm sm:text-2xl flex ml-6">
             <span className="text-orange-500">Go</span>
             <span className="text-slate-700">Land</span>
           </h1>
@@ -46,15 +47,15 @@ export default function Header() {
             <FaSearch className="text-slate-600"></FaSearch>
           </button>
         </form>
-        <ul className=" flex gap-4 items-center justify-center text-xl">
-          <Link to="/home">
-            <li className=" hidden sm:inline  text-slate-700 hover:underline">
+        <ul className=" flex gap-4 items-center justify-center">
+          <Link to="/">
+            <li className=" hidden sm:inline  text-slate-700 hover:underlinetext-sm sm:text-lg ">
               Home
             </li>
           </Link>
 
           <Link to="/about">
-            <li className=" hidden sm:inline  text-slate-700 hover:underline">
+            <li className=" hidden sm:inline  text-slate-700 hover:underline text-sm sm:text-lg">
               About
             </li>{" "}
           </Link>
@@ -67,7 +68,7 @@ export default function Header() {
                 className="w-10 h-10 rounded-full  "
               ></img>
             ) : (
-              <li className=" sm-inline  text-slate-700 hover:underline">
+              <li className=" sm-inline text-sm sm:text-lg text-slate-700 hover:underline mr-6 whitespace-nowrap">
                 Sign in
               </li>
             )}

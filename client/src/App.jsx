@@ -10,11 +10,12 @@ import PropertyListing from "./pages/PropertyListing";
 import UpdatePropertyInfo from "./pages/UpdatePropertyInfo";
 import Properties from "./pages/Properties";
 import Search from "./components/Search";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Header />
+      <Header  />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
@@ -32,6 +33,7 @@ export default function App() {
           ></Route>
         </Route>
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 }

@@ -47,7 +47,7 @@ export default function SignUp() {
 
   return (
     <div className="flex h-dvh">
-      <div className="flex-1 flex flex-col justify-center items-center bg-white">
+      <div className="flex-[3_3_0%] flex flex-col justify-center items-center bg-white">
         <h1 className="text-3xl text-center font-semibold mb-6">Sign Up</h1>
 
         <form
@@ -60,7 +60,6 @@ export default function SignUp() {
             type="text"
             placeholder="Username"
             onChange={handleChange}
-            Cont
           />
           <input
             className="p-4 bg-slate-100 border rounded-lg w-full focus:outline-none"
@@ -78,7 +77,7 @@ export default function SignUp() {
           ></input>
           <button
             disabled={loading}
-            className="bg-slate-700 text-white p-2 rounded-sm w-full hover:opacity-95"
+            className="bg-slate-700 text-white p-2 rounded-lg w-full hover:opacity-95"
           >
             {loading ? "Loading...." : "SignUp"}
           </button>
@@ -94,7 +93,7 @@ export default function SignUp() {
         {error && <p className="text-red-500">{error}</p>}
       </div>
 
-      <div className="flex-1">
+      <div className="flex-[7_7_0%]">
         <img
           className="h-full w-full "
           src="https://images.pexels.com/photos/7599735/pexels-photo-7599735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import ListingItems from "../components/ListingItems";
 
 export default function Search() {
   const [filter, setFilter] = useState({
@@ -8,18 +9,18 @@ export default function Search() {
     parking: false,
     furnished: false,
     offer: false,
-    sort: "createAt",
+    sort: "created_at",
     order: "desc",
   });
-  const navigate = useNavigate();
-  //console.log(filter);
 
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
   const [showMore, setShowMore] = useState(false);
+  const navigate = useNavigate();
 
-  //console.log(listings)
-  
+  //console.log(filter);
+  console.log(listings);
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
@@ -56,6 +57,9 @@ export default function Search() {
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/properties/get?${searchQuery}`);
       const data = await res.json();
+      if (!data) {
+        console.log(data.messagge);
+      }
       if (data.length > 8) {
         setShowMore(true);
       } else {
@@ -101,7 +105,7 @@ export default function Search() {
 
       const order = e.target.value.split("_")[1] || "desc";
 
-      setSidebardata({ ...sidebardata, sort, order });
+      setFilter({ ...filter, sort, order });
     }
   };
 
@@ -117,17 +121,25 @@ export default function Search() {
     urlParams.set("order", filter.order);
 
     const searchQuery = urlParams.toString();
+    // console.log(searchQuery);
     navigate(`/search?${searchQuery}`);
-    if (e.target.id === "sort_order") {
-      const sort = e.target.value.split("_")[0] || "created_at";
+  };
 
-      const order = e.target.value.split("_")[1] || "desc";
-
-      setSidebardata({ ...sidebardata, sort, order });
+  const onShowMoreClick = async () => {
+    const numberOfListings = listings.length;
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/properties/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.length < 9) {
+      setShowMore(false);
     }
+    setListings([...listings, ...data]);
   };
   return (
-    <div className="flex flex-col md:flex-row ">
+    <div className="flex flex-col md:flex-row pt-16">
       <div className=" p-7 border-b-2 md:border-r-2  h-full">
         <form onSubmit={handleSubmit} className=" flex flex-col gap-3">
           <div className=" flex gap-2 items-center">
@@ -135,10 +147,11 @@ export default function Search() {
               Search Term:
             </label>
             <input
-              className="p-2 rounded-lg w-full border"
+              className="p-3 rounded-lg w-full border"
               id="searchTerm"
               placeholder="search..."
               type="text"
+              value={filter.searchTerm}
               onChange={handleChange}
             ></input>
           </div>
@@ -211,7 +224,8 @@ export default function Search() {
           <div className="flex items-center gap-3 mb-20">
             <label className=" font-semibold">Sort:</label>
             <select
-              id="sort-order"
+              onChange={handleChange}
+              id="sort_order"
               className="border rounded-lg p-3"
               defaultValue={"created_at_desc"}
             >
@@ -226,8 +240,33 @@ export default function Search() {
           </button>
         </form>
       </div>
-      <div className="">
+      <div className="flex-1">
         <h1 className="text-2xl p-7 font-semibold">Properties Results</h1>
+        <div className="p-7 flex flex-wrap">
+          {!loading && listings.length === 0 && (
+            <p className="text-red-600 text-xl font-semibold">
+              No Properties Found
+            </p>
+          )}
+          {loading && (
+            <p className="text-green-700 font-semibold text-sm self-center">
+              Loading...
+            </p>
+          )}
+          {!loading &&
+            listings &&
+            listings.map((listing) => (
+              <ListingItems key={listing._id} listing={listing} />
+            ))}
+          {showMore && (
+            <button
+              onClick={onShowMoreClick}
+              className="text-green-700 hover:underline p-7 text-center w-full"
+            >
+              Show more
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

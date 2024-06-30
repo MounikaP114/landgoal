@@ -1,27 +1,23 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore from "swiper";
-import { useSelector } from "react-redux";
 import { Navigation } from "swiper/modules";
-import "swiper/css/bundle";
+import SwiperCore from "swiper";
+import "swiper/css/bundle"; // Adjusted CSS import
 import Contact from "../components/Contact";
+import { useSelector } from "react-redux";
 import {
   FaBath,
   FaBed,
   FaChair,
-  FaKickstarter,
-  FaMapMarkedAlt,
   FaMapMarkerAlt,
   FaParking,
   FaShare,
-  FaTv,
 } from "react-icons/fa";
 
-// https://sabe.io/blog/javascript-format-numbers-commas#:~:text=The%20best%20way%20to%20format,format%20the%20number%20with%20commas.
+SwiperCore.use([Navigation]);
 
 export default function Properties() {
-  SwiperCore.use([Navigation]);
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -29,37 +25,18 @@ export default function Properties() {
   const [contact, setContact] = useState(false);
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
- // console.log(currentUser._id, listing.userRef)
-  //console.log(listing)
-  // console.log(listing.bathRooms)
-  // imageUrls: [],
-  // name: "",
-  // description: "",
-  // address: "",
-  // regularPrice: 0,
-  // discountPrice: 0,
-  // bathRooms: 0,
-  // bedRooms: 0,
-  // kitchen: false,
-  // hall: false,
-  // parking: false,
-  // furnished: false,
-  // type: "rent",
-  // offers: true,
+
   useEffect(() => {
     const fetchListing = async () => {
       try {
         setLoading(true);
         const res = await fetch(`/api/properties/get/${params.propertyid}`);
         const data = await res.json();
-        if (data.success === false) {
-          setError(true);
-          setLoading(false);
-          return;
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to fetch data");
         }
         setListing(data);
         setLoading(false);
-        setError(false);
       } catch (error) {
         setError(true);
         setLoading(false);
@@ -67,20 +44,55 @@ export default function Properties() {
     };
     fetchListing();
   }, [params.propertyid]);
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+          // Handle error (e.g., show message to user)
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      // Handle unsupported geolocation (e.g., show message to user)
+    }
+  };
 
+  // Function to open Go Land app if available, otherwise open Google Maps
+  const handleOpenNavigation = () => {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+
+    const propertyAddress = encodeURI(
+      `${listing.address}, ${listing.city}, ${listing.state}, ${listing.zip}`
+    );
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${propertyAddress}&travelmode=driving`;
+
+    window.location.href = googleMapsUrl;
+  };
+
+  useEffect(() => {
+    // Fetch user location on component mount
+    
+    getUserLocation();
+  }, []);
   return (
     <main>
       {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
       {error && (
         <p className="text-center my-7 text-2xl">Something went wrong!</p>
       )}
-      {listing && !loading && !error && (
+      {listing && (
         <div>
           <Swiper navigation>
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <div
-                  className="h-[550px]"
+                  className="h-[550px] w-full"
                   style={{
                     background: `url(${url}) center no-repeat`,
                     backgroundSize: "cover",
@@ -109,22 +121,27 @@ export default function Properties() {
           <div className="flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4">
             <p className="text-2xl font-semibold">
               {listing.name} - ${" "}
-              {listing.offers
-                ? listing.discountPrice.toLocaleString("en-US")
-                : listing.regularPrice.toLocaleString("en-US")}
+              {listing.offer
+                ? listing.regularPrice.toLocaleString("en-US")
+                : listing.discountPrice.toLocaleString("en-US")}
               {listing.type === "rent" && " / month"}
             </p>
-            <p className="flex items-center mt-6 gap-2 text-slate-600  text-sm">
-              <FaMapMarkerAlt className="text-green-700" />
-              {listing.address}
+
+            <p
+              className="flex items-center mt-6 gap-2 text-slate-600 text-sm cursor-pointer"
+              onClick={handleOpenNavigation}
+            >
+              <FaMapMarkerAlt className="text-green-700 gap-3" />
+              {listing.address} {listing.city} {listing.state} {listing.zip}{" "}
             </p>
             <div className="flex gap-4">
               <p className="bg-red-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
                 {listing.type === "rent" ? "For Rent" : "For Sale"}
               </p>
-              {listing.offers && (
+
+              {listing.offer && (
                 <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
-                  ${+listing.regularPrice - +listing.discountPrice} OFF
+                  ${+listing.discountPrice} OFF
                 </p>
               )}
             </div>
@@ -133,38 +150,36 @@ export default function Properties() {
               {listing.description}
             </p>
             <ul className="text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6">
-              <li className="flex items-center gap-1 whitespace-nowrap ">
+              <li className="flex items-center gap-1 whitespace-nowrap">
                 <FaBed className="text-lg" />
                 {listing.bedRooms > 1
                   ? `${listing.bedRooms} Bed Rooms `
                   : `${listing.bedRooms} Bed Room `}
               </li>
-              <li className="flex items-center gap-1 whitespace-nowrap ">
+              <li className="flex items-center gap-1 whitespace-nowrap">
                 <FaBath className="text-lg" />
                 {listing.bathRooms > 1
                   ? `${listing.bathRooms} Bath Rooms `
                   : `${listing.bathRooms} Bath Room `}
               </li>
-              <li className="flex items-center gap-1 whitespace-nowrap ">
+              <li className="flex items-center gap-1 whitespace-nowrap">
                 <FaParking className="text-lg" />
                 {listing.parking ? "Parking spot" : "No Parking"}
               </li>
-              <li className="flex items-center gap-1 whitespace-nowrap ">
+              <li className="flex items-center gap-1 whitespace-nowrap">
                 <FaChair className="text-lg" />
                 {listing.furnished ? "Furnished" : "Unfurnished"}
               </li>
-              {/* <li className="flex items-center gap-1 whitespace-nowrap" >
-                    <FaLocationCrosshairs>
-                    {listing.kitchen ? "Kitchen" : "Unkitechen"}
-                    </FaLocationCrosshairs>
-              </li> */}
             </ul>
-            {currentUser && currentUser._id !== listing.userRef && !contact &&(
-              <button onClick={()=>setContact(true)} className="text-white rounded-lg p-3 hover:bg-slate-600 bg-slate-700">
-                Contact LandLord
+            {currentUser && currentUser._id !== listing.userRef && !contact && (
+              <button
+                onClick={() => setContact(true)}
+                className="text-white rounded-lg p-3 hover:bg-slate-600 bg-slate-700"
+              >
+                Contact Landlord
               </button>
             )}
-            {contact && <Contact listing={listing}/>}
+            {contact && <Contact listing={listing} />}
           </div>
         </div>
       )}
