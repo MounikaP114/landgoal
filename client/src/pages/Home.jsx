@@ -11,7 +11,7 @@ export default function Home() {
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
   SwiperCore.use([Navigation]);
-  //console.log(offerListings);
+
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
@@ -40,13 +40,14 @@ export default function Home() {
         const data = await res.json();
         setSaleListings(data);
       } catch (error) {
-        log(error);
+        console.log(error);
       }
     };
     fetchOfferListings();
   }, []);
+
   return (
-    <div >
+    <div>
       {/* top */}
       <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto ">
         <h1 className="text-orange-500 font-bold text-3xl lg:text-6xl">
@@ -73,24 +74,22 @@ export default function Home() {
         {offerListings &&
           offerListings.length > 0 &&
           offerListings.map((listing) => (
-            <SwiperSlide>
+            <SwiperSlide key={listing._id}>
               <div
                 style={{
                   background: `url(${listing.imageUrls[0]}) center no-repeat`,
                   backgroundSize: "cover",
                 }}
                 className="h-[500px]"
-                key={listing._id}
               ></div>
             </SwiperSlide>
           ))}
       </Swiper>
 
       {/* listing results for offer, sale and rent */}
-
       <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10">
         {offerListings && offerListings.length > 0 && (
-          <div className="">
+          <div>
             <div className="my-3">
               <h2 className="text-2xl font-semibold text-slate-600">
                 Recent offers
@@ -110,7 +109,7 @@ export default function Home() {
           </div>
         )}
         {rentListings && rentListings.length > 0 && (
-          <div className="">
+          <div>
             <div className="my-3">
               <h2 className="text-2xl font-semibold text-slate-600">
                 Recent places for rent
@@ -130,7 +129,7 @@ export default function Home() {
           </div>
         )}
         {saleListings && saleListings.length > 0 && (
-          <div className="">
+          <div>
             <div className="my-3">
               <h2 className="text-2xl font-semibold text-slate-600">
                 Recent places for sale
