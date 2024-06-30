@@ -5,10 +5,14 @@ import userRouter from "./routes/user.router.js";
 import authRouter from "./routes/auth-router.js";
 import cookieParser from "cookie-parser";
 import propertyRouter from "./routes/property-router.js";
+import  path from'path'
 dotenv.config();
+
+const __dirname=path.resolve()
 
 const app = express();
 const PORT = 3001;
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -24,6 +28,11 @@ mongoose
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/properties", propertyRouter);
+app.use(express.static(path.join(__dirname,"/client/dist")))
+app.get('*',(req,res)=>{
+  res.sendFile(path.join(__dirname, 'client','dist', 'index.html'))
+  
+})
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

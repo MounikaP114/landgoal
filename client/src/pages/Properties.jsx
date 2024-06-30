@@ -107,7 +107,7 @@ export default function Properties() {
             <p className="text-2xl font-semibold">
               {listing.name} - ${" "}
               {listing.offer
-                ? listing.discountPrice.toLocaleString("en-US")
+                ? listing.discountPrice.toLocaleString("")
                 : listing.regularPrice.toLocaleString("en-US")}
               {listing.type === "rent" && " / month"}
             </p>
@@ -126,12 +126,12 @@ export default function Properties() {
 
               {listing.offer && (
                 <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
-                  ${+listing.discountPrice} OFF
+                  ${+listing.regularPrice -listing.discountPrice} OFF
                 </p>
               )}
             </div>
 
-            
+
             <p className="text-slate-800">
               <span className="font-semibold text-black">Description - </span>
               {listing.description}
