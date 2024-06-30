@@ -1,51 +1,44 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  entry: './src/main.jsx',
+  entry: "./src/main.jsx",
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/',
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: [".js", ".jsx"],
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'assets',
-            },
-          },
-        ],
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/index.html',
-      filename: 'index.html',
+      template: "./public/index.html",
+      filename: "index.html",
     }),
   ],
   devServer: {
-    historyApiFallback: true,
-    contentBase: path.resolve(__dirname, 'dist'),
-    port: 3000,
-    open: true,
+    contentBase: path.join(__dirname, "dist"),
+    compress: true,
+    port: 3001,
   },
 };

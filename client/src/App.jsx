@@ -15,13 +15,13 @@ import Footer from "./components/Footer";
 export default function App() {
   return (
     <BrowserRouter>
-      <Header  />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/about" element={<About />} />
-        <Route path="/search" element={<Search/>}/>
+        <Route path="/search" element={<Search />} />
         <Route path="/properties/:propertyid" element={<Properties />} />
 
         <Route element={<PrivateRoute />}>
@@ -33,7 +33,7 @@ export default function App() {
           ></Route>
         </Route>
       </Routes>
-      <Footer/>
+      <Footer />
     </BrowserRouter>
   );
 }
