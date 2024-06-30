@@ -58,7 +58,7 @@ export default function Properties() {
         )}&travelmode=driving`;
 
         // Open Google Maps with the route
-        window.open(mapsURL, "_blank", "noopener noreferrer");
+        window.open(mapsURL, "_blank", "noopener noreferrer");x`x`
       });
     } else {
       alert("Geolocation is not supported by your browser.");
@@ -107,8 +107,8 @@ export default function Properties() {
             <p className="text-2xl font-semibold">
               {listing.name} - ${" "}
               {listing.offer
-                ? listing.discountPrice.toLocaleString("")
-                : listing.regularPrice.toLocaleString("en-US")}
+                ? listing.discountPrice
+                : listing.regularPrice}
               {listing.type === "rent" && " / month"}
             </p>
 
