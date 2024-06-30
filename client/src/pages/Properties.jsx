@@ -45,25 +45,25 @@ export default function Properties() {
     fetchListing();
   }, [params.propertyid]);
 
-  const handleClick = () => {
-    // Ensure the browser supports geolocation
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const userLat = position.coords.latitude;
-        const userLon = position.coords.longitude;
+  // const handleClick = () => {
+  //   // Ensure the browser supports geolocation
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //       const userLat = position.coords.latitude;
+  //       const userLon = position.coords.longitude;
 
-        const propertyAddress = ` ${listing.city}, ${listing.state} ${listing.zip}`;
-        const mapsURL = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLon}&destination=${encodeURIComponent(
-          propertyAddress
-        )}&travelmode=driving`;
+  //       const propertyAddress = ` ${listing.city}, ${listing.state} ${listing.zip}`;
+  //       const mapsURL = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLon}&destination=${encodeURIComponent(
+  //         propertyAddress
+  //       )}&travelmode=driving`;
 
-        // Open Google Maps with the route
-        window.open(mapsURL, "_blank", "noopener noreferrer");x`x`
-      });
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
-  };
+  //       // Open Google Maps with the route
+  //       window.open(mapsURL, "_blank", "noopener noreferrer");x`x`
+  //     });
+  //   } else {
+  //     alert("Geolocation is not supported by your browser.");
+  //   }
+  // };
 
   return (
     <main>
