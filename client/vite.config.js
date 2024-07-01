@@ -7,7 +7,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "http://localhost:3001",
-
+        changeOrigin: true,
         secure: false,
       },
     },
@@ -19,9 +19,4 @@ export default defineConfig({
     },
   },
   plugins: [react()],
-  build: {
-    rollupOptions: {
-      external: ["react", "react-dom"],
-    },
-  },
 });
