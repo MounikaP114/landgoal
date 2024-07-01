@@ -325,7 +325,7 @@ export default function PropertyListing() {
               />
             </label>
             <label className="flex items-center">
-              <span className="w-24 text-right">Regular Price ($/month):</span>
+              <span className="w-24 text-right">Regular Price (₹/month):</span>
               <input
                 type="number"
                 id="regularPrice"

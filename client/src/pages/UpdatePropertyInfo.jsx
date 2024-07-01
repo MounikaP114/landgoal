@@ -350,7 +350,7 @@ export default function UpdatePropertyInfo() {
                   onChange={handleChange}
                   value={formData.regularPrice}
                 />
-                Regular Price ($/months)
+                Regular Price (₹/months)
               </label>
               {formData.offers && (
                 <label htmlFor="discountPrice">
