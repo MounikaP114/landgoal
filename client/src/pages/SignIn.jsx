@@ -39,7 +39,7 @@ export default function SignIn() {
         return;
       }
       dispatch(signInSuccess(data));
-      navigate("/home");
+      navigate("/x");
       // Handle successful response here
     } catch (error) {
       dispatch(signInFailure(error.message));
