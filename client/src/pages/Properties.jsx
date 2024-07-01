@@ -45,25 +45,26 @@ export default function Properties() {
     fetchListing();
   }, [params.propertyid]);
 
-  // const handleClick = () => {
-  //   // Ensure the browser supports geolocation
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition((position) => {
-  //       const userLat = position.coords.latitude;
-  //       const userLon = position.coords.longitude;
+  const handleClick = () => {
+    // Ensure the browser supports geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
 
-  //       const propertyAddress = ` ${listing.city}, ${listing.state} ${listing.zip}`;
-  //       const mapsURL = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLon}&destination=${encodeURIComponent(
-  //         propertyAddress
-  //       )}&travelmode=driving`;
+        const propertyAddress = ` ${listing.city}, ${listing.state} ${listing.zip}`;
+        const mapsURL = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLon}&destination=${encodeURIComponent(
+          propertyAddress
+        )}&travelmode=driving`;
 
-  //       // Open Google Maps with the route
-  //       window.open(mapsURL, "_blank", "noopener noreferrer");x`x`
-  //     });
-  //   } else {
-  //     alert("Geolocation is not supported by your browser.");
-  //   }
-  // };
+        // Open Google Maps with the route
+        window.open(mapsURL, "_blank", "noopener noreferrer");
+        x`x`;
+      });
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
 
   return (
     <main>
@@ -106,15 +107,13 @@ export default function Properties() {
           <div className="flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4">
             <p className="text-2xl font-semibold">
               {listing.name} - ${" "}
-              {listing.offer
-                ? listing.discountPrice
-                : listing.regularPrice}
+              {listing.offer ? listing.discountPrice : listing.regularPrice}
               {listing.type === "rent" && " / month"}
             </p>
 
             <p
               className="flex items-center mt-6 gap-2 text-slate-600 text-sm cursor-pointer"
-              // onClick={handleClick}
+              onClick={handleClick}
             >
               <FaMapMarkerAlt className="text-green-700 gap-3" />
               {listing.address} {listing.city} {listing.state} {listing.zip}{" "}
@@ -126,11 +125,10 @@ export default function Properties() {
 
               {listing.offer && (
                 <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
-                  ${+listing.regularPrice -listing.discountPrice} OFF
+                  ${+listing.regularPrice - listing.discountPrice} OFF
                 </p>
               )}
             </div>
-
 
             <p className="text-slate-800">
               <span className="font-semibold text-black">Description - </span>
