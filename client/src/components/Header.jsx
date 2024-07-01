@@ -26,7 +26,7 @@ export default function Header() {
     <header className=" bg-slate-200 shadow-md w-full fixed top-0 left-0 z-50 ">
       <div className="flex justify-between items-center max-w-screen-4xl mx-auto m-1">
         <Link to="/">
-          <h1 className="font-extrabold text-sm sm:text-2xl flex ml-6">
+          <h1 className="font-extrabold text-sm sm:text-2xl flex ml-2">
             <span className="text-orange-500">Go</span>
             <span className="text-slate-700">Land</span>
           </h1>
@@ -47,7 +47,7 @@ export default function Header() {
             <FaSearch className="text-slate-600"></FaSearch>
           </button>
         </form>
-        <ul className=" flex gap-4 items-center justify-center">
+        <ul className=" flex gap-2">
           <Link to="/">
             <li className=" hidden sm:inline  text-slate-700 hover:text-slate-900 text-sm sm:text-lg ">
               Home
@@ -68,7 +68,7 @@ export default function Header() {
                 className="w-10 h-10 rounded-full  "
               ></img>
             ) : (
-              <li className=" sm-inline text-sm sm:text-lg text-slate-700 hover:text-slate-900 mr-6 whitespace-nowrap">
+              <li className=" sm-inline mr-2 text-sm sm:text-lg text-slate-700 hover:text-slate-900 whitespace-nowrap ">
                 Sign in
               </li>
             )}

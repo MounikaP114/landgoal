@@ -93,7 +93,7 @@ export default function SignUp() {
         {error && <p className="text-red-500">{error}</p>}
       </div>
 
-      <div className="flex-[7_7_0%]">
+      <div className="flex-[7_7_0%] hidden lg:block">
         <img
           className="h-full w-full "
           src="https://images.pexels.com/photos/7599735/pexels-photo-7599735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"

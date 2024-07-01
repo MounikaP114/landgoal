@@ -74,7 +74,7 @@ export default function SignIn() {
           ></input>
           <button
             disabled={loading}
-            className="bg-slate-700 text-white p-2 rounded-sm w-full hover:opacity-95"
+            className="bg-slate-700 text-white p-2 rounded-lg w-full hover:opacity-95 "
           >
             {loading ? "Loading...." : "SignIn"}
           </button>
@@ -84,14 +84,14 @@ export default function SignIn() {
         <div className="flex mt-4">
           <p className="pr-5">Dont Have an account? </p>
           <Link to={"/signup"}>
-            <span className="text-blue-600">Sign Up</span>
+            <span className="text-blue-600 ">Sign Up</span>
           </Link>
         </div>
         {error && <p className="text-red-500 mt-5">{error}</p>}
       </div>
 
       {/* Right side - Image */}
-      <div className=" flex-[7_7_0%]">
+      <div className="flex-[7_7_0%] hidden lg:block">
         <img
           className="h-full w-full "
           src="https://images.pexels.com/photos/7599735/pexels-photo-7599735.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
